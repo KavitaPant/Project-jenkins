@@ -48,7 +48,7 @@ pipeline {
             GIT_USER_NAME = "KavitaPant"
         }
         steps {
-          dir('spring-manifest')
+          dir('spring-manifest') {
             withCredentials([string(credentialsId: 'github', variable: 'GITHUB_TOKEN')]) {
                 sh '''
                     git config --global user.email "kavitapant19464@gmail.com"
@@ -63,6 +63,6 @@ pipeline {
                 '''
             }
         } 
-    }
+     }
   }
 }
