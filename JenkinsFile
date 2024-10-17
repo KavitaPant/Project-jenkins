@@ -50,9 +50,18 @@ pipeline {
             sh '''
               git config --global user.email "kavitapant19464@gmail.com"
               git config --global user.name "KavitaPant"
+              git checkout main || git checkout -b main
+              
+              # Update the deployment file with the new image tag
+              sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deployment.yml
+
+              # Clean up untracked files in the workspace root directory
+              cd .. && git clean -fdx
+
+              # Add only deployment.yml to Git and commit the changes
+              cd spring-manifest
               git config --global --add safe.directory /var/lib/jenkins/workspace/ultimate-demo
               chmod 644 deployment.yml
-              sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deployment.yml
               git add deployment.yml
               git commit -m "Update deployment image to version ${BUILD_NUMBER}"
               git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
