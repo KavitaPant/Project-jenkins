@@ -51,9 +51,10 @@ pipeline {
               git config --global user.email "kavitapant19464@gmail.com"
               git config --global user.name "KavitaPant" 
               git config --global --add safe.directory /var/lib/jenkins/workspace/ultimate-demo
-              git pull origin main
+              rm -rf ../spring-manifest@tmp/ ../target/
               sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deployment.yml
               chmod 644 deployment.yml
+              git add -A
               git commit -m "Update deployment image to version ${BUILD_NUMBER}"
               git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
             '''
