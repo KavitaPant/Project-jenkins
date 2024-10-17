@@ -53,7 +53,7 @@ pipeline {
               sed -i "s/replaceImageTag/${BUILD_NUMBER}/g" deployment.yml
               git config --global --add safe.directory /var/lib/jenkins/workspace/ultimate-demo
               chmod 644 deployment.yml
-              rm -rf ../spring-manifest@tmp/ ../target/
+              rm -r ../spring-manifest@tmp/ ../target/
               git add deployment.yml
               git commit -m "Update deployment image to version ${BUILD_NUMBER}"
               git push https://${GITHUB_TOKEN}@github.com/${GIT_USER_NAME}/${GIT_REPO_NAME}.git HEAD:main
