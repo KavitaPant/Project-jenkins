@@ -12,6 +12,7 @@ pipeline {
                 checkout scm
             }
         }
+
         stage('Build and Test') {
             steps {
                 sh '''#!/bin/bash
@@ -21,6 +22,7 @@ pipeline {
                 '''
             }
         }
+
         stage('Static Code Analysis') {
             environment {
                 SONAR_URL = "http://44.204.156.236:9000/"
@@ -34,6 +36,7 @@ pipeline {
                 }
             }
         }
+
         stage('Build and Push Docker Image') {
             environment {
                 DOCKER_IMAGE = "kavi021994/ultimate-demo:${BUILD_NUMBER}"
@@ -43,14 +46,15 @@ pipeline {
                     sh '''#!/bin/bash
                     set -x
                     docker build -t ${DOCKER_IMAGE} . || { echo "Docker build failed"; exit 1; }
-                    // Use the correct syntax for defining a variable
-                    docker.withRegistry('https://index.docker.io/v1/', "docker-cred") {
+                    '''
+                    // Move docker.withRegistry block outside the shell script
+                    docker.withRegistry('https://index.docker.io/v1/', 'docker-cred') {
                         docker.image("${DOCKER_IMAGE}").push()
                     }
-                    '''
                 }
             }
         }
+
         stage('Update Deployment File') {
             environment {
                 GIT_REPO_NAME = "Project-jenkins"
